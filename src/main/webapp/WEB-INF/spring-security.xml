@@ -1,0 +1,91 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<http pattern="/resources/**" security="none" />
+	<http pattern="/assets/**" security="none" />
+
+	<http use-expressions="true">
+		<access-denied-handler error-page="/403" />
+
+		<intercept-url pattern="/images/**" access="permitAll" />
+		<intercept-url pattern="/assets/**" access="permitAll" />
+		<intercept-url pattern="/resources/**" access="permitAll" />
+		<intercept-url pattern="/login*" access="permitAll" />
+		<intercept-url pattern="/aboneOlForm*" access="permitAll" />
+		<intercept-url pattern="/saveAboneWeb*" access="permitAll" />
+		<intercept-url pattern="/aboneOlFormSonuc*" access="permitAll" />
+		<intercept-url pattern="/unsubscribe*" access="permitAll" />
+		<intercept-url pattern="/newUye*" access="permitAll" />
+		<intercept-url pattern="/editUye*" access="permitAll" />
+		<intercept-url pattern="/newSube*" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/editSube*" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/logs/**" access="hasRole('ROLE_ADMIN')" />
+
+		<!-- <intercept-url pattern="/login*" access="isAnonymous()" /> -->
+		<intercept-url pattern="/**" access="isFullyAuthenticated()" />
+
+		<form-login login-page="/login" username-parameter="j_username"
+			password-parameter="j_password" login-processing-url="/j_spring_security_check"
+			authentication-failure-url="/login?login_error=1" />
+		<logout logout-url="/j_spring_security_logout" />
+		<csrf disabled="true" />
+	</http>
+
+	<!-- <http use-expressions="true"> <intercept-url pattern="/login*" access="isAnonymous()" 
+		/> <intercept-url pattern="/**" access="isFullyAuthenticated()" /> <form-login 
+		login-page="/login" login-processing-url="/AktiffelsefeMailSistemi/j_spring_security_check.action" 
+		authentication-failure-url="/AktiffelsefeMailSistemi/login_error.html" default-target-url="/AktiffelsefeMailSistemi" 
+		always-use-default-target="true" /> <csrf disabled="true" /> </http> -->
+	<!-- <http auto-config="true" use-expressions="true"> <intercept-url pattern="/**" 
+		access="hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')" /> <logout logout-success-url="/" 
+		logout-url="/j_spring_security_logout" /> <csrf disabled="true" /> </http> -->
+
+
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="istanbulbakırköy" password="OXcq89Y1" authorities="ROLE_ISTANBULBAKIRKOY" />
+				<user name="ankaramerkez" password="NCvt74J1" authorities="ROLE_ANKARAMERKEZ" />
+				<user name="ankarabatıkent" password="ankarabatıkent"
+					authorities="ROLE_ANKARABATIKENT" />
+				<user name="antalya" password="JMur10S2" authorities="ROLE_ANTALYA" />
+				<user name="adana" password="XZxz67Z2" authorities="ROLE_ADANA" />
+				<user name="kuzeyadana" password="kuzeyadana" authorities="ROLE_KUZEYADANA" />
+				<user name="aydın" password="aydın" authorities="ROLE_AYDIN" />
+				<user name="bursa" password="HXhr46E3" authorities="ROLE_BURSA" />
+				<user name="denizli" password="denizli" authorities="ROLE_DENİZLİ" />
+				<user name="eskişehir" password="ZKwy40M7" authorities="ROLE_ESKİŞEHİR" />
+				<user name="istanbulfatih" password="istanbulfatih"
+					authorities="ROLE_ISTANBULFATİH" />
+				<user name="istanbulkadıköy" password="PHiw54B6" authorities="ROLE_ISTANBULKADIKÖY" />
+				<user name="istanbullevent" password="istanbullevent"
+					authorities="ROLE_ISTANBULLEVENT" />
+				<user name="istanbulmaltepe" password="istanbulmaltepe"
+					authorities="ROLE_ISTANBULMALTEPE" />
+				<user name="istanbulşişli" password="ASdg49S8" authorities="ROLE_ISTANBULŞİŞLİ" />
+				<user name="istanbulüsküdar" password="QSsc63L0" authorities="ROLE_ISTANBULÜSKÜDAR" />
+				<user name="izmiralsancak" password="OQkf27L3" authorities="ROLE_İZMİRALSANCAK" />
+				<user name="izmirbornova" password="NTyn37A6" authorities="ROLE_İZMİRBORNOVA" />
+				<user name="izmirbuca" password="izmirbuca" authorities="ROLE_İZMİRBUCA" />
+				<user name="izmirgüzelyalı" password="MSiq05S0" authorities="ROLE_İZMİRGÜZELYALI" />
+				<user name="izmirkarşıyaka" password="WPfl07K2" authorities="ROLE_İZMİRKARŞIYAKA" />
+				<user name="izmit" password="YOzn50S3" authorities="ROLE_İZMİT" />
+				<user name="manisa" password="manisa" authorities="ROLE_MANİSA" />
+				<user name="mersin" password="CScr61E2" authorities="ROLE_MERSİN" />
+				<user name="admin" password="Mevlana_99" authorities="ROLE_ADMIN" />
+
+				<user name="yoklamabakırköy" password="PLqw15H4" authorities="ROLE_YOKLAMABAKIRKOY" />
+				<user name="halklailişkiler" password="HLre95L8" authorities="ROLE_HALKLAILISKILER" />
+				<user name="provasyonizm" password="hayal.et.feda.et.gerceklestir" authorities="ROLE_TEMELSEMINER" />
+				<user name="eğitim" password="EGmt15T3" authorities="ROLE_UYEGRUPLARI" />
+
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+
+
+</beans:beans>

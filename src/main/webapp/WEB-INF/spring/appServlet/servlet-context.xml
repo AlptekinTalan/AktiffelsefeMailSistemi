@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd 
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+
+	<!-- Components, Controller, Service, DAO annotationlari bulsun -->
+	<context:component-scan base-package="com.alptekintalan" />
+
+	<!-- Video, JS, CSS, Images etc -->
+	<mvc:annotation-driven />
+	<context:annotation-config />
+
+	<mvc:resources mapping="/resources/**" location="/resources/"
+		cache-period="31556926" />
+
+	<mvc:resources mapping="/assets/**" location="/assets/"
+		cache-period="31556926" />
+
+	<mvc:resources mapping="/images/**" location="file:/home/ubuntu/images/"
+		cache-period="31556926" />
+
+	<mvc:resources mapping="/logs/**" location="file:/home/ubuntu/apache-tomcat-8.5.15/logs/"
+		cache-period="31556926" />
+
+	<!-- View Resolver -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+	<!-- MAİL ATMA GELİŞTİRMESİ -->
+	<task:annotation-driven />
+	<!-- <beans:bean id="mailAt" class="com.alptekintalan.controller.MailAt"></beans:bean> -->
+	<!-- DOSYAAAAAAAAAAAAA EKLEMEEEEEEEEEEEEEEEEEE -->
+
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+		<!-- setting maximum upload size -->
+		<beans:property name="maxUploadSize" value="20971520" />
+
+	</beans:bean>
+
+	<context:component-scan base-package="com.journaldev.spring.controller" />
+
+	<!-- DOSYAAAAAAAAAAAAA EKLEMEEEEEEEEEEEEEEEEEE -->
+
+	<!-- Veritabani bilgilerini properties dosyasından al. -->
+	<context:property-placeholder location="classpath:application.properties" />
+
+	<!-- Veritabani icin DataSource -->
+	<beans:bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<beans:property name="driverClass" value="${database.driverClass}" />
+		<beans:property name="jdbcUrl" value="${database.url}" />
+		<beans:property name="user" value="${database.username}" />
+		<beans:property name="password" value="${database.password}" />
+
+		<beans:property name="acquireIncrement" value="${connection.acquireIncrement}" />
+		<beans:property name="minPoolSize" value="${connection.minPoolSize}" />
+		<beans:property name="maxPoolSize" value="${connection.maxPoolSize}" />
+		<beans:property name="maxIdleTime" value="${connection.maxIdleTime}" />
+	</beans:bean>
+
+	<!-- Hibernate SessionFactory -->
+	<beans:bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="hibernateProperties">
+			<beans:props>
+				<beans:prop key="hibernate.dialect">${hibernate.dialect}</beans:prop>
+				<beans:prop key="hibernate.show_sql">false</beans:prop>
+				<beans:prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</beans:prop>
+				<beans:prop key="hibernate.format_sql">${hibernate.format_sql}</beans:prop>
+			</beans:props>
+		</beans:property>
+		<beans:property name="packagesToScan"
+			value="com.alptekintalan.model.pojo.entity" />
+	</beans:bean>
+
+	<!-- Spring Mail Sender Genel -->
+	<beans:bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="smtp.gmail.com" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="aktiffelsefe.ims@gmail.com" />
+		<beans:property name="password" value="Mevlana_99" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Bakırköy -->
+	<beans:bean id="mailSenderBakirkoy"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username"
+			value="ebulten.bakirkoy@aktiffelsefe.org" />
+		<beans:property name="password" value="OXcq89Y1" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Adana -->
+	<beans:bean id="mailSenderAdana"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.adana@aktiffelsefe.org" />
+		<beans:property name="password" value="XZxz67Z2" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Ankara -->
+	<beans:bean id="mailSenderAnkara"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.ankara@aktiffelsefe.org" />
+		<beans:property name="password" value="NCvt74J1" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Bursa -->
+	<beans:bean id="mailSenderBursa"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.bursa@aktiffelsefe.org" />
+		<beans:property name="password" value="HXhr46E3" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Alsancak -->
+	<beans:bean id="mailSenderAlsancak"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username"
+			value="ebulten.alsancak@aktiffelsefe.org" />
+		<beans:property name="password" value="OQkf27L3" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Güzelyalı -->
+	<beans:bean id="mailSenderGuzelyali"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username"
+			value="ebulten.guzelyali@aktiffelsefe.org" />
+		<beans:property name="password" value="MSiq05S0" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Karşıyaka -->
+	<beans:bean id="mailSenderKarsiyaka"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username"
+			value="ebulten.karsiyaka@aktiffelsefe.org" />
+		<beans:property name="password" value="WPfl07K2" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Bornova -->
+	<beans:bean id="mailSenderBornova"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.bornova@aktiffelsefe.org" />
+		<beans:property name="password" value="NTyn37A6" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Mersin -->
+	<beans:bean id="mailSenderMersin"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.mersin@aktiffelsefe.org" />
+		<beans:property name="password" value="CScr61E2" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Üsküdar -->
+	<beans:bean id="mailSenderUskudar"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.uskudar@aktiffelsefe.org" />
+		<beans:property name="password" value="QSsc63L0" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender KadiKöy -->
+	<beans:bean id="mailSenderKadikoy"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.kadikoy@aktiffelsefe.org" />
+		<beans:property name="password" value="PHiw54B6" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender İzmit -->
+	<beans:bean id="mailSenderIzmit"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.izmit@aktiffelsefe.org" />
+		<beans:property name="password" value="YOzn50S3" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Antalya -->
+	<beans:bean id="mailSenderAntalya"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.antalya@aktiffelsefe.org" />
+		<beans:property name="password" value="JMur10S2" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Eskişehir -->
+	<beans:bean id="mailSenderEskisehir"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username"
+			value="ebulten.eskisehir@aktiffelsefe.org" />
+		<beans:property name="password" value="ZKwy40M7" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Spring Mail Sender Şişli -->
+	<beans:bean id="mailSenderSisli"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="mail.aktiffelsefe.org" />
+		<beans:property name="port" value="587" />
+		<beans:property name="username" value="ebulten.sisli@aktiffelsefe.org" />
+		<beans:property name="password" value="ASdg49S8" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory
+				</beans:prop>
+				<beans:prop key="mail.smtp.socketFactory.port">587</beans:prop>
+				<beans:prop key="mail.debug">false</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<!-- Transaction -->
+	<beans:bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans:beans>
